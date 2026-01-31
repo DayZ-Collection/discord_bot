@@ -23,17 +23,31 @@ export class ModService {
 
         const actionColors = {
             BAN: { hex: Colors.Red, ansi: '[1;31m' },
-            KICK: { hex: Colors.Orange, ansi: '[1;33m' },
+            KICK: { hex: Colors.Yellow, ansi: '[1;33m' },
             MUTE: { hex: Colors.Blue, ansi: '[1;34m' }
         };
 
         const style = actionColors[action];
-        const platformLabel = origin === 'DISCORD' ? '🌐 DISCORD' : '🎮 DAYZ SERVER';
+        const platformLabel = origin === 'DISCORD' ? 'DISCORD' : 'DAYZ SERVER';
         
+        // Математический расчет для рамки (внутренняя ширина 43 символа, как в задачах)
+        const innerWidth = 43;
+        
+        const line1Content = ` ИНЦИДЕНТ БЕЗОПАСНОСТИ`;
+        const padding1 = ' '.repeat(Math.max(0, innerWidth - line1Content.length));
+
+        const line2Content = ` ИСТОЧНИК: ${platformLabel}`;
+        const padding2 = ' '.repeat(Math.max(0, innerWidth - line2Content.length));
+        
+        const line3Content = ` ДЕЙСТВИЕ: ${action}`;
+        const padding3 = ' '.repeat(Math.max(0, innerWidth - line3Content.length));
+
+        const ansiHeader = `\`\`\`ansi\n${style.ansi}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n┃${line1Content}${padding1}┃\n┃${line2Content}${padding2}┃\n┃${line3Content}${padding3}┃\n┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛[0m\n\`\`\``;
+
         const embed = new EmbedBuilder()
-            .setTitle(`${action} | Отчет безопасности`)
             .setColor(style.hex)
-            .setDescription(`\`\`\`ansi\n${style.ansi}┏━━━━━━━━━━━━ ИНЦИДЕНТ БЕЗОПАСНОСТИ ━━━━━━━━━━━━┓\n┃ ИСТОЧНИК: ${platformLabel}\n┃ ДЕЙСТВИЕ: ${action}\n┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛[0m\n\`\`\``)
+            .setTitle('🛡️ Протокол безопасности обновлен')
+            .setDescription(ansiHeader)
             .addFields(
                 { name: '👤 Нарушитель', value: `\`${target.tag}\`\n(ID: ${target.id})`, inline: true },
                 { name: '🛡️ Модератор', value: `\`${moderator.tag}\``, inline: true },
